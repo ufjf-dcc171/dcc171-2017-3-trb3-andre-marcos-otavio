@@ -5,6 +5,8 @@
  */
 package Model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Desenvolvedor
@@ -12,23 +14,23 @@ package Model;
 public class Tarefa {
     private int id;
     private String nome;
+    private double duracao;
     private double valorPercentualAndamento;
     private String dataInicio;
     private String dataConclusão;
-    private Tarefa tarefaAntecessora;
-    private Tarefa sucessora;
+    private ArrayList<Tarefa> tarefaFazerAntes;
 
     public Tarefa() {
     }
 
-    public Tarefa(int id, String nome, double valorPercentualAndamento, String dataInicio, String dataConclusão, Tarefa tarefaAntecessora, Tarefa sucessora) {
+    public Tarefa(int id, String nome, double duracao, double valorPercentualAndamento, String dataInicio, String dataConclusão, ArrayList<Tarefa> tarefaFazerAntes) {
         this.id = id;
         this.nome = nome;
+        this.duracao = duracao;
         this.valorPercentualAndamento = valorPercentualAndamento;
         this.dataInicio = dataInicio;
         this.dataConclusão = dataConclusão;
-        this.tarefaAntecessora = tarefaAntecessora;
-        this.sucessora = sucessora;
+        this.tarefaFazerAntes = tarefaFazerAntes;
     }
 
     public int getId() {
@@ -45,6 +47,14 @@ public class Tarefa {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public double getDuracao() {
+        return duracao;
+    }
+
+    public void setDuracao(double duracao) {
+        this.duracao = duracao;
     }
 
     public double getValorPercentualAndamento() {
@@ -71,24 +81,17 @@ public class Tarefa {
         this.dataConclusão = dataConclusão;
     }
 
-    public Tarefa getTarefaAntecessora() {
-        return tarefaAntecessora;
+    public ArrayList<Tarefa> getTarefaFazerAntes() {
+        return tarefaFazerAntes;
     }
 
-    public void setTarefaAntecessora(Tarefa tarefaAntecessora) {
-        this.tarefaAntecessora = tarefaAntecessora;
+    public void setTarefaFazerAntes(ArrayList<Tarefa> tarefaFazerAntes) {
+        this.tarefaFazerAntes = tarefaFazerAntes;
     }
-
-    public Tarefa getSucessora() {
-        return sucessora;
-    }
-
-    public void setSucessora(Tarefa sucessora) {
-        this.sucessora = sucessora;
-    }
-    
-    
-
-    
    
+    
+
+
+
+
 }

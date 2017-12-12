@@ -84,7 +84,7 @@ public class PessoaDAO {
                 Pessoa pessoa = new Pessoa();
                 pessoa.setId(rs.getInt("id"));
                 pessoa.setNome(rs.getString("nome"));
-                pessoa.setNome(rs.getString("email"));
+                pessoa.setEmail(rs.getString("email"));
                 pessoas.add(pessoa);
             }
 

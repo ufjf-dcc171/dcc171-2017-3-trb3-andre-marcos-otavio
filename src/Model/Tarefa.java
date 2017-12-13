@@ -17,7 +17,7 @@ public class Tarefa {
     private double duracao;
     private double valorPercentualAndamento;
     private String dataInicio;
-    private String dataConclusão;
+    private String dataConclusao;
     private ArrayList<Tarefa> tarefaFazerAntes;
 
     public Tarefa() {
@@ -29,7 +29,7 @@ public class Tarefa {
         this.duracao = duracao;
         this.valorPercentualAndamento = valorPercentualAndamento;
         this.dataInicio = dataInicio;
-        this.dataConclusão = dataConclusão;
+        this.dataConclusao = dataConclusão;
         this.tarefaFazerAntes = tarefaFazerAntes;
     }
 
@@ -74,11 +74,11 @@ public class Tarefa {
     }
 
     public String getDataConclusão() {
-        return dataConclusão;
+        return dataConclusao;
     }
 
     public void setDataConclusão(String dataConclusão) {
-        this.dataConclusão = dataConclusão;
+        this.dataConclusao = dataConclusão;
     }
 
     public ArrayList<Tarefa> getTarefaFazerAntes() {

@@ -5,17 +5,29 @@
  */
 package View;
 
+import DAO.PessoaDAO;
+import DAO.ProjetoDAO;
+import Model.Pessoa;
+import Model.Projeto;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Desenvolvedor
  */
 public class CadastroProjetos extends javax.swing.JFrame {
-
+DefaultTableModel modeloModel;
     /**
      * Creates new form CadastroRpojetos
      */
-    public CadastroProjetos() {
+    public CadastroProjetos() throws ClassNotFoundException, SQLException {
         initComponents();
+        modeloModel = (DefaultTableModel) tabelaProjeto.getModel();
+        updateTabela();
+        
     }
 
     /**
@@ -28,14 +40,16 @@ public class CadastroProjetos extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabelaProjeto = new javax.swing.JTable();
         Inserir = new javax.swing.JToggleButton();
         jToggleButton2 = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
+        nome = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabelaProjeto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -46,7 +60,7 @@ public class CadastroProjetos extends javax.swing.JFrame {
                 "ID", "NOME"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tabelaProjeto);
 
         Inserir.setText("Inserir");
         Inserir.addActionListener(new java.awt.event.ActionListener() {
@@ -64,47 +78,114 @@ public class CadastroProjetos extends javax.swing.JFrame {
 
         jLabel1.setText("Cadastro de Projetos");
 
+        nome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nomeActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Nome:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jToggleButton2)
-                .addGap(18, 18, 18)
-                .addComponent(Inserir)
-                .addGap(21, 21, 21))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(nome, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(Inserir)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 161, Short.MAX_VALUE)
+                        .addComponent(jToggleButton2))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 26, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(Inserir)
-                            .addComponent(jToggleButton2))
-                        .addGap(18, 18, 18))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Inserir)
+                    .addComponent(jToggleButton2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void InserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InserirActionPerformed
-        // TODO add your handling code here:
+       
+        Projeto projeto= new Projeto();
+        projeto.setNome(nome.getText());
+    
+        
+    try {
+        ProjetoDAO.getInstance().inserir(projeto);
+        System.out.println("Pessoa Inserir com Sucesso!");
+    } catch (ClassNotFoundException ex) {
+        Logger.getLogger(CadastroPessoas.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (SQLException ex) {
+        Logger.getLogger(CadastroPessoas.class.getName()).log(Level.SEVERE, null, ex);
+    }
+        
+        
+        
+        
+        
+        
+    try {
+        updateTabela();
+    } catch (ClassNotFoundException ex) {
+        Logger.getLogger(CadastroPessoas.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (SQLException ex) {
+        Logger.getLogger(CadastroPessoas.class.getName()).log(Level.SEVERE, null, ex);
+    }
+        
     }//GEN-LAST:event_InserirActionPerformed
 
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        // TODO add your handling code here:
+         Integer id = (Integer) modeloModel.getValueAt(tabelaProjeto.getSelectedRow(), 0);
+          
+    try {
+        ProjetoDAO.getInstance().excluirProjeto(id);
+    } catch (ClassNotFoundException ex) {
+        Logger.getLogger(CadastroPessoas.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (SQLException ex) {
+        Logger.getLogger(CadastroPessoas.class.getName()).log(Level.SEVERE, null, ex);
+    }
+        
+        
+        
+    try {
+        updateTabela();
+    } catch (ClassNotFoundException ex) {
+        Logger.getLogger(CadastroPessoas.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (SQLException ex) {
+        Logger.getLogger(CadastroPessoas.class.getName()).log(Level.SEVERE, null, ex);
+    }
+        
     }//GEN-LAST:event_jToggleButton2ActionPerformed
+
+    private void nomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nomeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -137,16 +218,34 @@ public class CadastroProjetos extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CadastroProjetos().setVisible(true);
+                try {
+                    new CadastroProjetos().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(CadastroProjetos.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(CadastroProjetos.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
+    }
+    
+     public void updateTabela() throws ClassNotFoundException, SQLException {
+        while (tabelaProjeto.getRowCount() > 0) {
+            modeloModel.removeRow(0);
+        }
+        for (Projeto c : ProjetoDAO.getInstance().lerTodosProjetos()) {
+            modeloModel.addRow(new Object[]{c.getId(), c.getNome()});
+        }
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton Inserir;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JToggleButton jToggleButton2;
+    private javax.swing.JTextField nome;
+    private javax.swing.JTable tabelaProjeto;
     // End of variables declaration//GEN-END:variables
 }

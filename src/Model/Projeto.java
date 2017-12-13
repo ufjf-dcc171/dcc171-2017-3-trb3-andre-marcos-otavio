@@ -17,11 +17,18 @@ public class Projeto {
     public Projeto() {
     }
 
+    public Projeto(int id, String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
+
     public Projeto(int id, String nome, Tarefa tarefa) {
         this.id = id;
         this.nome = nome;
         this.tarefa = tarefa;
     }
+    
+    
 
     public int getId() {
         return id;

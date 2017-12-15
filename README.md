@@ -1,6 +1,7 @@
-Alunos: André Magno Ribeiro ,
-        Marcos ,
-        Otavio 
+Alunos: 
+André Magno Ribeiro Matricula: 201376060 Curso: Sistema de Informação\n
+        Marcos \n
+        Otavio \n 
 
 
 O sistema consiste em um gerenciador de projetos e suas tarefas.

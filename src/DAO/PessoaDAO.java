@@ -97,24 +97,71 @@ public class PessoaDAO {
         return pessoas;
 
     }
-
-    public Pessoa lerPessoa(int id) throws ClassNotFoundException, SQLException {
-        Connection conn = null;
+    
+    
+        public Pessoa lerPessoa(String nome) throws ClassNotFoundException, SQLException {
+       
+            Pessoa pessoa=null;
+            Connection conn = null;
         PreparedStatement st = null;
         ResultSet rs;
-        System.out.println("ssdfdfasdfasdfasdfasdf"+id);
-        conn = DatabaseLocator.getInstance().getConnection();
-        st = conn.prepareStatement("SELECT * FROM pessoa WHERE id=" + id);
-        rs = st.executeQuery();
 
-        Pessoa pessoa = new Pessoa();
-        pessoa.setId(rs.getInt("id"));
-        pessoa.setNome(rs.getString("nome"));
-        pessoa.setEmail(rs.getString("email"));
+        ArrayList<Pessoa> pessoas = new ArrayList();
+        try {
+            conn = DatabaseLocator.getInstance().getConnection();
+            st = conn.prepareStatement("SELECT * FROM Pessoa where nome='"+nome+"'");
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+                pessoa = new Pessoa();
+                pessoa.setId(rs.getInt("id"));
+                pessoa.setNome(rs.getString("nome"));
+                pessoa.setEmail(rs.getString("email"));
+          
+            }
+
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            closeResources(conn, st);
+
+        }
         return pessoa;
 
     }
     
+        public Pessoa lerPessoa(int id) throws ClassNotFoundException, SQLException {
+       
+            Pessoa pessoa=null;
+            Connection conn = null;
+        PreparedStatement st = null;
+        ResultSet rs;
+
+        ArrayList<Pessoa> pessoas = new ArrayList();
+        try {
+            conn = DatabaseLocator.getInstance().getConnection();
+            st = conn.prepareStatement("SELECT * FROM Pessoa where nome="+id);
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+                pessoa = new Pessoa();
+                pessoa.setId(rs.getInt("id"));
+                pessoa.setNome(rs.getString("nome"));
+                pessoa.setEmail(rs.getString("email"));
+          
+            }
+
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            closeResources(conn, st);
+
+        }
+        return pessoa;
+
+    }
+   
+
     
         public boolean excluirPessoa(int id) throws ClassNotFoundException, SQLException {
         Connection conn = null;

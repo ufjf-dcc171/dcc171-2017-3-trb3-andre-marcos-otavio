@@ -6,8 +6,17 @@
 package View;
 
 import DAO.PessoaDAO;
+import DAO.TarefaDAO;
 import Model.Pessoa;
+import Model.Tarefa;
+
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -15,11 +24,16 @@ import java.sql.SQLException;
  */
 public final class CadastroTarefas extends javax.swing.JFrame {
 
+    DefaultTableModel modeloModel;
+
     /**
      * Creates new form CadastroTarefas
      */
-    public CadastroTarefas()  {
+    public CadastroTarefas() throws ClassNotFoundException, SQLException {
         initComponents();
+
+        modeloModel = (DefaultTableModel) tabelaTarefa.getModel();
+        updateTabela();
         updateCombo();
     }
 
@@ -33,7 +47,7 @@ public final class CadastroTarefas extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabelaTarefa = new javax.swing.JTable();
         jToggleButton1 = new javax.swing.JToggleButton();
         jToggleButton2 = new javax.swing.JToggleButton();
         jToggleButton3 = new javax.swing.JToggleButton();
@@ -47,7 +61,7 @@ public final class CadastroTarefas extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("Sistema de Gerenciamento de Tarefas"); // NOI18N
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabelaTarefa.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -55,12 +69,12 @@ public final class CadastroTarefas extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "id", "Projeto", "Nome", "Duração", "Pessoa", "Inicio", "Concluida"
+                "id", "Projeto", "Nome", "Duração(Dias)", "Inicio", "Concluida", "%completa"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
-        jTable1.getAccessibleContext().setAccessibleName("");
-        jTable1.getAccessibleContext().setAccessibleDescription("Sistema de Gerenciamento de Tarefas");
+        jScrollPane1.setViewportView(tabelaTarefa);
+        tabelaTarefa.getAccessibleContext().setAccessibleName("");
+        tabelaTarefa.getAccessibleContext().setAccessibleDescription("Sistema de Gerenciamento de Tarefas");
 
         jToggleButton1.setText("Excluir");
         jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -70,18 +84,48 @@ public final class CadastroTarefas extends javax.swing.JFrame {
         });
 
         jToggleButton2.setText("Inserir Tarefa");
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
 
         jToggleButton3.setText("Editar Tarefa");
+        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton3ActionPerformed(evt);
+            }
+        });
 
         comboFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton1.setText("Filtrar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Visualizar Pessoas desta Tarefa");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Iniciar Tarefa");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Tarefa Concluida");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Gerenciamento de Tarefas");
 
@@ -98,12 +142,13 @@ public final class CadastroTarefas extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 651, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(comboFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -115,12 +160,9 @@ public final class CadastroTarefas extends javax.swing.JFrame {
                                         .addComponent(jToggleButton3)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jToggleButton1)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 288, Short.MAX_VALUE)
                                 .addComponent(jButton2)))
-                        .addGap(14, 14, 14))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(14, 14, 14))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,7 +185,7 @@ public final class CadastroTarefas extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
                     .addComponent(jButton4))
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         getAccessibleContext().setAccessibleName("Sistema de Gerenciamento de Tarefas");
@@ -155,6 +197,112 @@ public final class CadastroTarefas extends javax.swing.JFrame {
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton1ActionPerformed
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        try {
+            InserirTarefa tela = new InserirTarefa();
+            tela.setVisible(true);
+        } catch (Exception ex) {
+            Logger.getLogger(CadastroTarefas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
+
+    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
+
+        Integer tarefaid = (Integer) modeloModel.getValueAt(tabelaTarefa.getSelectedRow(), 0);
+
+        try {
+            InserirTarefa tela = new InserirTarefa(tarefaid);
+            tela.setVisible(true);
+        } catch (Exception ex) {
+            Logger.getLogger(CadastroTarefas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_jToggleButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+        Integer tarefaid = (Integer) modeloModel.getValueAt(tabelaTarefa.getSelectedRow(), 0);
+
+        try {
+            PessoaTarefa tela = new PessoaTarefa(tarefaid);
+            tela.setVisible(true);
+        } catch (Exception ex) {
+            Logger.getLogger(CadastroTarefas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        Integer tarefaid = (Integer) modeloModel.getValueAt(tabelaTarefa.getSelectedRow(), 0);
+
+        try {
+            Tarefa tarefa = TarefaDAO.getInstance().lerTarefa(tarefaid);
+            Date data = new Date();
+
+            SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy--HH:mm:ss");
+            String dataFormatada = formatador.format(data);
+         
+            tarefa.setDataInicio(dataFormatada);
+            TarefaDAO.getInstance().update(tarefa);
+            updateTabela();
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CadastroTarefas.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastroTarefas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+               Integer tarefaid = (Integer) modeloModel.getValueAt(tabelaTarefa.getSelectedRow(), 0);
+
+        try {
+            Tarefa tarefa = TarefaDAO.getInstance().lerTarefa(tarefaid);
+            Date data = new Date();
+
+            SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy--HH:mm:ss");
+            String dataFormatada = formatador.format(data);
+         
+            tarefa.setDataConclusao(dataFormatada);
+            TarefaDAO.getInstance().update(tarefa);
+            updateTabela();
+            
+            
+            
+            TarefaDAO.getInstance().excluirTarefaFeitaDaDEpedencia(tarefa.getId());
+            
+            
+            
+            
+            
+            
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CadastroTarefas.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastroTarefas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            updateTabela(comboFiltro.getSelectedItem().toString());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CadastroTarefas.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastroTarefas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -186,18 +334,42 @@ public final class CadastroTarefas extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CadastroTarefas().setVisible(true);
+                try {
+                    new CadastroTarefas().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(CadastroTarefas.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(CadastroTarefas.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
- public void updateCombo() {
-     
-            comboFiltro.removeAllItems();
-            comboFiltro.addItem("Todas as tarefas");
-            comboFiltro.addItem("Todas as tarefas concluídas");
-            comboFiltro.addItem("Todas a tarefas fazer");
-            comboFiltro.addItem("Todas as tarefas possíveis de serem iniciadas");
-        
+
+    public void updateCombo() {
+
+        comboFiltro.removeAllItems();
+        comboFiltro.addItem("Todas as tarefas");
+        comboFiltro.addItem("Todas as tarefas concluídas");
+        comboFiltro.addItem("Todas a tarefas fazer");
+        comboFiltro.addItem("Todas as tarefas possíveis de serem iniciadas");
+
+    }
+    public void updateTabela(String i) throws ClassNotFoundException, SQLException {
+        while (tabelaTarefa.getRowCount() > 0) {
+            modeloModel.removeRow(0);
+        }
+        for (Tarefa c : TarefaDAO.getInstance().lerFiltroTarefas(i)) {
+            modeloModel.addRow(new Object[]{c.getId(), c.getProjeto().getNome(), c.getNome(), c.getDuracao(), c.getDataInicio(), c.getDataConclusao(), c.getValorPercentualAndamento()});
+        }
+
+    }
+    public void updateTabela() throws ClassNotFoundException, SQLException {
+        while (tabelaTarefa.getRowCount() > 0) {
+            modeloModel.removeRow(0);
+        }
+        for (Tarefa c : TarefaDAO.getInstance().lerTodosTarefas()) {
+            modeloModel.addRow(new Object[]{c.getId(), c.getProjeto().getNome(), c.getNome(), c.getDuracao(), c.getDataInicio(), c.getDataConclusao(), c.getValorPercentualAndamento()});
+        }
 
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -208,9 +380,9 @@ public final class CadastroTarefas extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JToggleButton jToggleButton3;
+    private javax.swing.JTable tabelaTarefa;
     // End of variables declaration//GEN-END:variables
 }

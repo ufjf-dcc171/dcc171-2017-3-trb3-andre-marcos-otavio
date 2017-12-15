@@ -18,20 +18,45 @@ public class Tarefa {
     private double valorPercentualAndamento;
     private String dataInicio;
     private String dataConclusao;
+    private Projeto projeto;
     private ArrayList<Tarefa> tarefaFazerAntes;
+    private boolean disponivel;
 
     public Tarefa() {
     }
 
-    public Tarefa(int id, String nome, double duracao, double valorPercentualAndamento, String dataInicio, String dataConclusão, ArrayList<Tarefa> tarefaFazerAntes) {
+    public Tarefa(int id, String nome, double duracao, double valorPercentualAndamento, String dataInicio, String dataConclusao, Projeto projeto, ArrayList<Tarefa> tarefaFazerAntes) {
         this.id = id;
         this.nome = nome;
         this.duracao = duracao;
         this.valorPercentualAndamento = valorPercentualAndamento;
         this.dataInicio = dataInicio;
-        this.dataConclusao = dataConclusão;
+        this.dataConclusao = dataConclusao;
+        this.projeto = projeto;
         this.tarefaFazerAntes = tarefaFazerAntes;
     }
+
+    public String getDataConclusao() {
+        return dataConclusao;
+    }
+
+    public void setDataConclusao(String dataConclusao) {
+        this.dataConclusao = dataConclusao;
+    }
+
+    public Projeto getProjeto() {
+        return projeto;
+    }
+
+    public void setProjeto(Projeto projeto) {
+        this.projeto = projeto;
+    }
+
+    public void setDisponivel(boolean disponivel) {
+        this.disponivel = disponivel;
+    }
+
+
 
     public int getId() {
         return id;
@@ -51,6 +76,10 @@ public class Tarefa {
 
     public double getDuracao() {
         return duracao;
+    }
+    
+     public boolean getDisponivel() {
+        return disponivel;
     }
 
     public void setDuracao(double duracao) {

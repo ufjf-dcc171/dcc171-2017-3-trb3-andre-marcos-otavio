@@ -1,4 +1,3 @@
-
 package DAO;
 
 import Model.Projeto;
@@ -9,25 +8,21 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-
 /**
  *
  * @author Desenvolvedor
  */
 public class ProjetoDAO {
-    
+
     private static ProjetoDAO instance;
 
-        public static ProjetoDAO getInstance() {
+    public static ProjetoDAO getInstance() {
         if (instance == null) {
             instance = new ProjetoDAO();
         }
         return instance;
     }
 
-        
-        
-        
     public void inserir(Projeto projeto) throws ClassNotFoundException, SQLException {
         Connection conn = null;
         Statement st = null;
@@ -39,15 +34,13 @@ public class ProjetoDAO {
                         + "VALUES ('" + projeto.getNome() + "')");
             }//  INSERT INTO Projeto (NOME, EMAIL) VALUES ('Andre, 'andre@gmail.com');
 
-
         } catch (SQLException e) {
             throw e;
         } finally {
             closeResources(conn, st);
         }
     }
-    
-  
+
     public void updateComTarefa(Projeto projeto) throws ClassNotFoundException, SQLException {
         Connection conn = null;
         Statement st = null;
@@ -55,7 +48,7 @@ public class ProjetoDAO {
             conn = DatabaseLocator.getInstance().getConnection();
             st = conn.createStatement();
 
-            st.execute("update projeto set nome="+projeto.getNome()+" WHERE id="+projeto.getId());
+            st.execute("update projeto set nome=" + projeto.getNome() + " WHERE id=" + projeto.getId());
 
         } catch (SQLException e) {
             throw e;
@@ -63,7 +56,6 @@ public class ProjetoDAO {
             closeResources(conn, st);
         }
     }
-
 
     public ArrayList<Projeto> lerTodosProjetos() throws ClassNotFoundException, SQLException {
         Connection conn = null;
@@ -80,7 +72,7 @@ public class ProjetoDAO {
                 Projeto projeto = new Projeto();
                 projeto.setId(rs.getInt("id"));
                 projeto.setNome(rs.getString("nome"));
-               
+
                 projetos.add(projeto);
             }
 
@@ -94,24 +86,37 @@ public class ProjetoDAO {
 
     }
 
-    public Projeto lerProjeto(int id) throws ClassNotFoundException, SQLException {
+    public Projeto lerProjeto(int id) throws SQLException, ClassNotFoundException {
         Connection conn = null;
         PreparedStatement st = null;
+         Projeto projeto = null;
         ResultSet rs;
-        System.out.println("ssdfdfasdfasdfasdfasdf"+id);
+        System.out.println("ssdfdfasdfasdfasdfasdf" + id);
+        try{
         conn = DatabaseLocator.getInstance().getConnection();
-        st = conn.prepareStatement("SELECT * FROM projeto WHERE id=" + id);
-        rs = st.executeQuery();
 
-        Projeto projeto = new Projeto();
-        projeto.setId(rs.getInt("id"));
-        projeto.setNome(rs.getString("nome"));
+        st = conn.prepareStatement("select * from projeto where id=1");
+        rs = st.executeQuery();
+  
+            while (rs.next()) {
+               projeto = new Projeto();
+                projeto.setId(rs.getInt("id"));
+                projeto.setNome(rs.getString("nome"));
+
+              
+            }
+
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            closeResources(conn, st);
+
+        }
         return projeto;
 
     }
-    
-    
-        public boolean excluirProjeto(int id) throws ClassNotFoundException, SQLException {
+
+    public boolean excluirProjeto(int id) throws ClassNotFoundException, SQLException {
         Connection conn = null;
         PreparedStatement st = null;
         ResultSet rs;

@@ -5,6 +5,8 @@
  */
 package Model;
 
+import java.awt.PopupMenu;
+
 /**
  *
  * @author Desenvolvedor
@@ -16,6 +18,8 @@ public class Projeto {
 
     public Projeto() {
     }
+
+
 
     public Projeto(int id, String nome) {
         this.id = id;

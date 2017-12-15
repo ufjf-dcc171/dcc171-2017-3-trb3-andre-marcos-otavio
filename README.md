@@ -1,17 +1,36 @@
 Alunos: 
 André Magno Ribeiro Matricula: 201376060 Curso: Sistema de Informação;  
-        Marcos;  
-        Otavio
+Marcos Aquino;  
+Otavio Augusto Ferreira Rodrigues Matricula: 201276030 Curso: Sistema de Informação;  
 
+RELATÓRIO
 
-O sistema consiste em um gerenciador de projetos e suas tarefas.
-     
-     
+Foi desenvolvido um gerenciador de tarefas em Java, para auxiliar uma equipe de desenvolvimento a organizar melhor seus projetos.
+Facilitando a visualização das tarefas e prazos. Fazendo também o gerenciamento dos responsáveis e envolvidos em cada tarefa.
+        
 MODELO
 
-O modelo consiste na tabelas: tarefa, projeto, pessoa pessoas_tarefas, depedencia. 
-As tabelas pessoas_tarefas e depedencia são tabelas que faz o relacionamento n para n de tarefa para pessoa
-e tarefa para tarefa respectivamente. 
+No nosso modelo de banco de dados existem as seguintes tabelas:
+	- tarefa;
+	- projeto;
+	- pessoa;
+	- pessoas_tarefas;
+	- depedencia 
+
+
+RELACIONAMENTO DAS TABELAS
+
+Uma tarefa pode ter varias pessoas envolvidas;
+Uma pessoa pode ter varias tarefas;
+A tabela pessoas_tarefas é responsável por fazer o relacionamento de N pra N entre as tabelas pessoas e tarefa;
+
+Um tarefa pode depender de outra para ser realizada;
+A tabela dependencia é responsável por fazer o relacionamento de N pra N entre as tabelas tarefa e tarefa;
+
+Um Projeto pode ter N tarefas;
+	- projeto 1,N tarefas
+
+SCRIPTS PARA CRIAÇÃO DO BANCO DE DADOS
 
 create table pessoa (
     id     INTEGER NOT NULL 
@@ -57,7 +76,6 @@ create table pessoas_tarefas (
 
 
 POSIVEIS MELHORAS
-
-O sistema poderia ser melhorado em questão de layout e seu codigo poderia se mais otimisado em questão de busca no banco de dados.
-
+Para realizar melhorias no futuro o sistema desenvolvido poderia ter seu layout melhorado;
+As consultas e inserções no banco de dados poderiam ser otimizadas, a fim de melhorar sua performance.
 

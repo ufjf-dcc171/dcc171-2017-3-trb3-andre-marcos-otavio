@@ -1,5 +1,5 @@
-Alunos: André Magno Ribeiro 
-        Marcos 
+Alunos: André Magno Ribeiro ,
+        Marcos ,
         Otavio 
 
 
